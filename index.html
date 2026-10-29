@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>One Scan is Enough: Demonstration-Free Adaptation for Language-Guided Navigation</title>
+  <meta name="description" content="Scan2Instruction compiles a single iPhone scan into training episodes, and PRPT-KS adapts the RealNav navigation VLA with no demonstrations. NeurIPS 2026.">
+  <meta property="og:title" content="One Scan is Enough: Demonstration-Free Adaptation for Language-Guided Navigation">
+  <meta property="og:description" content="One iPhone scan, a deployable language-guided navigation policy. NeurIPS 2026.">
+  <meta property="og:image" content="https://one-scan-is-enough.github.io/static/images/teaser.jpg">
+  <meta property="og:url" content="https://one-scan-is-enough.github.io/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="static/hero/hero.css">
+  <script type="module" src="static/hero/hero.js"></script>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <h1>One Scan is Enough: Demonstration-Free Adaptation for Language-Guided Navigation</h1>
+    <p class="authors">
+      <span>Zhuoyuan Yu<sup>*</sup></span>
+      <span>Yuxing Long<sup>*</sup></span>
+      <span>Du Wang<sup>*</sup></span>
+      <span>Junyang Wang</span>
+      <span>Hongwei Fan</span>
+      <span>Hao Dong<sup>&dagger;</sup></span>
+    </p>
+    <p class="affil">CFCS, School of Computer Science, Peking University<br>PrimeBot</p>
+    <p class="note"><sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>&dagger;</sup>Corresponding author</p>
+    <div class="venue">NeurIPS 2026</div>
+    <div class="buttons">
+      <a class="btn btn-paper" href="https://arxiv.org/abs/2610.33794"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6V2zm8 1.5V8h4.5L14 3.5zM8 12h10v1.5H8V12zm0 3h10v1.5H8V15zm0 3h7v1.5H8V18z"/></svg>Paper</a>
+      <a class="btn btn-code" href="https://github.com/DynamicCast03/one-scan-is-enough"><svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>Code</a>
+      <a class="btn btn-data" href="https://huggingface.co/datasets/dynamica/one-scan-is-enough-demo-apartment"><svg viewBox="0 0 24 24"><path d="M12 2C7 2 3 3.8 3 6v12c0 2.2 4 4 9 4s9-1.8 9-4V6c0-2.2-4-4-9-4zm0 2c4.4 0 7 1.5 7 2s-2.6 2-7 2-7-1.5-7-2 2.6-2 7-2zM5 9c1.7 1 4.2 1.5 7 1.5s5.3-.5 7-1.5v3c0 .5-2.6 2-7 2s-7-1.5-7-2V9zm0 6c1.7 1 4.2 1.5 7 1.5s5.3-.5 7-1.5v3c0 .5-2.6 2-7 2s-7-1.5-7-2v-3z"/></svg>Data</a>
+      <a class="btn btn-model" href="https://huggingface.co/dynamica/RealNav-Base"><svg viewBox="0 0 24 24"><path d="M12 1.5 21.5 7v10L12 22.5 2.5 17V7L12 1.5zm0 2.3L5.4 7.6 12 11.4l6.6-3.8L12 3.8zM4.5 9.3v6.5l6.5 3.8v-6.5L4.5 9.3zm15 0L13 13.1v6.5l6.5-3.8V9.3z"/></svg>Model</a>
+    </div>
+  </div>
+</header>
+
+<section id="hero" class="hero-anim" aria-label="Animated overview of the pipeline">
+  <div class="hero-card">
+    <div class="hero-caption"><h2 class="hc-title">One handheld scan</h2></div>
+    <div class="hero-stage">
+      <canvas class="hero-gl"></canvas>
+      <canvas class="hero-fx"></canvas>
+      <div class="hero-phone" aria-hidden="true">
+        <i class="hero-key hk-side"></i><i class="hero-key hk-camera"></i>
+        <i class="hero-key hk-action"></i><i class="hero-key hk-up"></i><i class="hero-key hk-down"></i>
+        <div class="hero-phone-body">
+          <div class="hero-screen">
+            <div class="hero-view">
+              <div class="hero-feed"></div>
+              <div class="hero-feed"></div>
+              <div class="hero-lidar"></div>
+              <div class="hero-reticle"><i></i><i></i><i></i><i></i></div>
+              <div class="hero-flash"></div>
+              <span class="hero-progress"><b></b></span>
+            </div>
+            <div class="hero-island"></div>
+            <div class="hero-ui-left"><span class="hero-rec"><i></i><b data-time>00:00</b></span><span class="hero-tag">LiDAR</span></div>
+            <div class="hero-ui-right"><span class="hero-shutter"><i></i></span><span class="hero-count"><b data-views>0</b>views</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-teaser">
+        <img data-src="static/images/teaser.jpg" alt="Overview: Scan2Instruction compiles a scene scan into training episodes, PRPT-KS post-trains RealNav, and the robot follows language instructions in real scenes" decoding="async">
+        <button type="button" class="hero-replay">Replay</button>
+      </div>
+      <div class="hero-loading"><i></i>Loading the scene</div>
+    </div>
+    <div class="hero-panel">
+      <div class="hp hp-instruction">
+        <div class="hp-head"><b data-episodes>0</b> episodes compiled</div>
+        <div class="hp-legend">
+          <span style="--c:#f08c00">Route following <b data-count="vln">0</b></span>
+          <span style="--c:#1c7ed6">Object Goal <b data-count="object">0</b></span>
+          <span style="--c:#d6336c">Human Demand <b data-count="need">0</b></span>
+        </div>
+        <div class="hp-card">
+          <div class="hp-goal" role="img" aria-label="Goal view"></div>
+          <div class="hp-body"><span class="hp-tag"></span><p class="hp-text"></p></div>
+        </div>
+      </div>
+      <div class="hp hp-training">
+        <div class="hp-head">PRPT-KS post-training <span class="hp-prog"><b data-progress></b></span></div>
+        <div class="hp-rollout"><span class="hp-tag" data-lane-tag></span><p data-lane-text></p></div>
+        <div class="hp-bars">
+          <div class="hp-bar"><span>U<sub>prog</sub></span><i><b data-bar="prog"></b></i><em data-value="prog">+0.00</em></div>
+          <div class="hp-bar"><span>U<sub>safe</sub></span><i><b data-bar="safe"></b></i><em data-value="safe">+0.00</em></div>
+          <div class="hp-bar"><span>U<sub>stop</sub></span><i><b data-bar="stop"></b></i><em data-value="stop">0</em></div>
+        </div>
+        <div class="hp-verdict" data-verdict></div>
+      </div>
+    </div>
+    <nav class="hero-chapters" aria-label="Animation chapters">
+      <button type="button" class="hero-play" aria-label="Pause animation"></button>
+    </nav>
+  </div>
+</section>
+
+<section id="abstract" class="abstract">
+  <div class="container">
+    <h2>Abstract</h2>
+    <p>Deploying a language-guided navigation policy in a new building usually means watching it fail. Public-benchmark VLAs degrade scene by scene as layout, appearance, and language drift, and the standard fix of teleoperating fresh trajectories on site does not scale. We replace human demonstration with a single brief iPhone scan. <b>Scan2Instruction</b> compiles that scan into a complete training environment, automatically synthesizing executable navigation episodes with grounded instructions. <b>PRPT-KS</b> then adapts the policy through a closed-form Pareto utility read directly off the reconstructed scene, with no learned critic and no human labels. Across five real environments, the two designs together drive our RealNav to an <b>85% real-robot success rate</b>, compared with <b>49%</b> for a RealNav baseline post-trained on human demonstrations, and still achieve <b>82% in unscanned regions of the same buildings</b>, compared with <b>41%</b> for the same baseline. Our work turns demonstration-free scene adaptation for language-guided navigation from an aspiration into a working reality.</p>
+  </div>
+</section>
+
+<section id="overview">
+  <div class="container">
+    <h2>Overview</h2>
+    <figure>
+      <img src="static/images/teaser.jpg" alt="Overview: a scene scan is compiled by Scan2Instruction, PRPT-KS post-trains RealNav, and the robot follows language instructions in real scenes" loading="lazy">
+      <figcaption><b>One iPhone scan, a deployable language-guided navigation policy.</b> Left: Scan2Instruction compiles a brief handheld scan into scene-specific training episodes, and PRPT-KS adapts RealNav on them with no demonstrations and no human labels. Right: real-robot rollouts following natural-language instructions in the scanned scenes.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="method">
+  <div class="container">
+    <h2>Method</h2>
+
+    <h3>Scan2Instruction: compiling a scan into language-navigation episodes</h3>
+    <p>A handheld iPhone with a built-in LiDAR sensor captures the scene as an RGB-D video, with per-frame camera poses from ARKit or offline ORB-SLAM3. Scan2Instruction recovers two coupled layers from it: an appearance layer, a planar-regularized 3D Gaussian splat reconstructed with LiDAR depth supervision that renders photorealistic first-person views, and a geometric layer, a bird's-eye free-space map with a continuous clearance field. A* with a clearance-penalized edge cost plans collision-aware reference trajectories between sampled start and goal points, and a pretrained MLLM turns rendered route frames and goal views into three instruction types.</p>
+    <div class="types">
+      <div class="type"><b>Route following</b>actions and landmarks describing the route<br><i>"Walk forward past the blue cart and the closed door. Stop in front of the first green plant on your left."</i></div>
+      <div class="type"><b>Object Goal</b>a named target object, without route directions<br><i>"Go to the wooden double doors."</i></div>
+      <div class="type"><b>Human Demand</b>a functional request, without naming the target object or describing the route<br><i>"I'm hungry. Take me somewhere I can prepare a meal."</i></div>
+    </div>
+    <figure>
+      <img src="static/images/scan2instruction.jpg" alt="Scan2Instruction pipeline: scene scan, scene representation, trajectory planning, instruction synthesis" loading="lazy">
+      <figcaption><b>Scan2Instruction pipeline.</b> A pretrained MLLM takes rendered images, goal views, and a type-specific prompt to generate Route following, Object Goal, or Human Demand instructions.</figcaption>
+    </figure>
+
+    <h3>RealNav: a continuous-trajectory navigation VLA</h3>
+    <p>RealNav is built on Qwen3-VL. The instruction and a sampled history of RGB observations pass through the backbone together with a small set of dedicated navigation tokens, whose final hidden states feed a lightweight MLP action head. The head predicts K = 8 future local waypoints (x, y, &theta;) in the robot frame. RealNav is first pretrained on R2R-CE and RxR-CE with an MSE behavior-cloning loss, before any access to the target scene.</p>
+
+    <h3>PRPT-KS: Pareto-utility Reinforcement Post-Training in Known Scenes</h3>
+    <p>Because the target scene is already known, PRPT-KS reads a closed-form three-axis Pareto utility U = (U<sub>prog</sub>, U<sub>safe</sub>, U<sub>stop</sub>) of path progress, obstacle safety, and correct stopping directly off the reconstructed geometry. The same vector is used three ways:</p>
+    <ul>
+      <li><b>Pareto-utility advantage</b>: the sum of the three components replaces a learned critic in a clipped policy-gradient update;</li>
+      <li><b>Pareto-admissible rollouts</b>: a per-axis test lets the planner replace actions that leave the free-space map or regress progress;</li>
+      <li><b>Pareto-weighted preference pairs</b>: each rejected action paired with the planner action becomes a preference label, weighted by vector Pareto dominance.</li>
+    </ul>
+    <p>A step-wise expert buffer of planner reference actions supplies a behavior-cloning anchor, and a short-to-long trajectory curriculum and a cosine covariance schedule keep post-training stable. The unified objective combines the policy-gradient loss, the behavior-cloning anchor, and the Pareto-weighted preference loss.</p>
+    <figure>
+      <img src="static/images/prpt_ks.jpg" alt="PRPT-KS pipeline: Pareto-utility vector drives on-policy updates, admissible rollouts, and weighted preference pairs" loading="lazy">
+      <figcaption><b>PRPT-KS pipeline.</b> A Pareto utility vector read from known-scene geometry drives rollout updates, gates rollouts, and weights preference pairs.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="results">
+  <div class="container">
+    <h2>Results</h2>
+    <p>We evaluate on five real scenes (an office, a cottage, a teaching building, and two apartments; 768 m<sup>2</sup> scanned in 62 minutes in total), both in the reconstructed Gaussian scenes and on the physical robot. Human-demo-sft variants are fine-tuned on 20 teleoperated trajectories per scene.</p>
+
+    <h3>Main evaluation on five scanned scenes</h3>
+    <p class="table-caption">Success rate (SR) as sim / real. Average SR is computed from pooled successes and trials across scenes.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Office</th><th>Cottage</th><th>Teaching</th><th>Apartment 1</th><th>Apartment 2</th><th>Average</th></tr>
+        </thead>
+        <tbody>
+          <tr class="group"><td colspan="7">3D scene-graph mapping</td></tr>
+          <tr><td>DualMap</td><td>0.32 / 0.17</td><td>0.22 / 0.13</td><td>0.17 / 0.10</td><td>0.35 / 0.17</td><td>0.33 / 0.17</td><td>0.28 / 0.15</td></tr>
+          <tr class="group"><td colspan="7">Navigation VLA</td></tr>
+          <tr><td>NaVILA</td><td>0.25 / 0.20</td><td>0.20 / 0.23</td><td>0.12 / 0.15</td><td>0.19 / 0.20</td><td>0.22 / 0.23</td><td>0.20 / 0.20</td></tr>
+          <tr><td>Uni-NaVid</td><td>0.17 / 0.22</td><td>0.22 / 0.23</td><td>0.29 / 0.15</td><td>0.19 / 0.20</td><td>0.21 / 0.20</td><td>0.22 / 0.20</td></tr>
+          <tr><td>StreamVLN</td><td>0.26 / 0.17</td><td>0.26 / 0.13</td><td>0.10 / 0.13</td><td>0.23 / 0.30</td><td>0.30 / 0.23</td><td>0.23 / 0.18</td></tr>
+          <tr><td>OmniNav</td><td>0.26 / 0.22</td><td>0.19 / 0.20</td><td>0.19 / 0.23</td><td>0.27 / 0.27</td><td>0.25 / 0.20</td><td>0.23 / 0.22</td></tr>
+          <tr><td>CorrectNav</td><td>0.13 / 0.18</td><td>0.14 / 0.23</td><td>0.18 / 0.25</td><td>0.36 / 0.27</td><td>0.29 / 0.20</td><td>0.22 / 0.22</td></tr>
+          <tr><td>CorrectNav (human-demo-sft)</td><td>0.35 / 0.47</td><td>0.36 / 0.43</td><td>0.40 / 0.48</td><td>0.58 / 0.57</td><td>0.51 / 0.50</td><td>0.44 / 0.48</td></tr>
+          <tr class="group"><td colspan="7">Ours</td></tr>
+          <tr><td>RealNav</td><td>0.22 / 0.25</td><td>0.24 / 0.28</td><td>0.17 / 0.23</td><td>0.22 / 0.23</td><td>0.30 / 0.23</td><td>0.23 / 0.25</td></tr>
+          <tr><td>RealNav (human-demo-sft)</td><td>0.37 / 0.48</td><td>0.34 / 0.45</td><td>0.42 / 0.45</td><td>0.56 / 0.57</td><td>0.49 / 0.53</td><td>0.44 / 0.49</td></tr>
+          <tr class="best"><td>RealNav + PRPT-KS</td><td>0.79 / 0.78</td><td>0.93 / 0.95</td><td>0.81 / 0.83</td><td>0.85 / 0.87</td><td>0.87 / 0.87</td><td>0.85 / 0.85</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>In 100 real-robot trials in never-scanned regions of the same buildings, where starts, goals, and waypoints all lie outside the reconstruction, RealNav + PRPT-KS reaches 0.82 SR, compared with 0.41 for RealNav (human-demo-sft) and 0.40 for CorrectNav (human-demo-sft).</p>
+
+    <h3>Ablations</h3>
+    <p class="table-caption">The full pipeline compared with RealNav before scene-specific post-training and with variants that each disable one loss term of the post-training objective. Metrics are measured on the reconstructed Gaussian scenes.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Variant</th><th>SR &uarr;</th><th>SPL &uarr;</th><th>NE (m) &darr;</th><th>OS &uarr;</th></tr>
+        </thead>
+        <tbody>
+          <tr class="best"><td>RealNav + PRPT-KS (Full)</td><td>0.85</td><td>0.834</td><td class="regular">1.42</td><td>0.88</td></tr>
+          <tr class="rule"><td>RealNav (w/o PRPT-KS post-training)</td><td>0.23</td><td>0.210</td><td>3.50</td><td>0.27</td></tr>
+          <tr class="rule"><td>w/o behavior-cloning anchor</td><td>0.30</td><td>0.293</td><td>3.49</td><td>0.41</td></tr>
+          <tr><td>w/o Pareto-utility advantage</td><td>0.81</td><td>0.785</td><td><b>1.31</b></td><td>0.85</td></tr>
+          <tr><td>w/o Pareto-weighted preference</td><td>0.80</td><td>0.781</td><td>1.32</td><td>0.83</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="bibtex">
+  <div class="container">
+    <h2>BibTeX</h2>
+<pre class="bibtex"><code>@inproceedings{yu2026onescan,
+  title     = {One Scan is Enough: Demonstration-Free Adaptation for Language-Guided Navigation},
+  author    = {Yu, Zhuoyuan and Long, Yuxing and Wang, Du and Wang, Junyang and Fan, Hongwei and Dong, Hao},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2026}
+}</code></pre>
+  </div>
+</section>
+
+<footer>
+  <div class="container">CFCS, School of Computer Science, Peking University<br>PrimeBot</div>
+</footer>
+
+</body>
+</html>

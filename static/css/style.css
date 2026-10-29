@@ -1,0 +1,83 @@
+:root {
+  --fg: #1d2330;
+  --muted: #5b6475;
+  --accent: #2f6fde;
+  --bg: #ffffff;
+  --soft: #f4f6fa;
+  --line: #e1e5ec;
+  --best: #e9f1ff;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.65;
+  font-size: 17px;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+header.hero { text-align: center; padding: 56px 0 24px; }
+.hero h1 { font-size: 2.4rem; line-height: 1.25; margin: 0 0 18px; font-weight: 700; }
+.authors { font-size: 1.1rem; margin: 0 0 6px; }
+.authors span { display: inline-block; margin: 0 8px; }
+.affil { color: var(--muted); margin: 0; }
+.note { color: var(--muted); font-size: 0.9rem; margin: 6px 0 0; }
+.venue { display: inline-block; margin: 16px 0 0; padding: 4px 14px; border-radius: 999px; background: var(--soft); font-weight: 600; }
+.buttons { margin: 22px 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 20px; border-radius: 999px;
+  background: #1d2330; color: #fff; font-weight: 600;
+}
+.btn:hover { filter: brightness(1.15); text-decoration: none; }
+/* Colors match the badges of the code repository README. */
+.btn-paper { background: #b31b1b; }
+.btn-data { background: #f08c00; }
+.btn-model { background: #0ca678; }
+.btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+section { padding: 28px 0; }
+section h2 { font-size: 1.6rem; margin: 0 0 16px; text-align: center; }
+section h3 { font-size: 1.2rem; margin: 28px 0 8px; }
+.abstract { background: var(--soft); }
+.abstract p { text-align: justify; margin: 0; }
+
+figure { margin: 0; }
+figure img { width: 100%; height: auto; display: block; border-radius: 6px; }
+figcaption { color: var(--muted); font-size: 0.95rem; margin-top: 10px; }
+
+.types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0 18px; }
+.type { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 0.95rem; }
+.type b { display: block; }
+.type i { color: var(--muted); }
+
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 8px 0 6px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; white-space: nowrap; }
+th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; }
+th:first-child, td:first-child { text-align: left; }
+thead th { border-bottom: 2px solid var(--fg); }
+tr.group td { font-style: italic; color: var(--muted); background: var(--soft); }
+tr.best td { background: var(--best); font-weight: 700; }
+tr.best td.regular { font-weight: 400; }
+tr.rule td { border-top: 1px solid #b9c0cc; }
+.table-caption { color: var(--muted); font-size: 0.92rem; }
+
+pre.bibtex {
+  background: var(--soft); border-radius: 8px; padding: 16px;
+  overflow-x: auto; font-size: 0.85rem; line-height: 1.5; margin: 0;
+}
+footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 32px 0 40px; }
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  header.hero { padding-top: 36px; }
+  .hero h1 { font-size: 1.6rem; }
+  .authors { font-size: 1rem; }
+  .types { grid-template-columns: 1fr; }
+  .abstract p { text-align: left; }
+}
